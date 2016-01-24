@@ -3,7 +3,11 @@ package org.adi.lasting.flags;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.util.Enumeration;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,9 +27,11 @@ public class XmlToSvgConverter implements ISvgConverter<File> {
 	private DocumentBuilderFactory factory;
 	private TransformerFactory transformerFactory;
 	
-	public XmlToSvgConverter(){
-		File fIn = new File(getClass().getResource("flag.xslt").getFile());
-		style = new StreamSource(fIn);
+	public XmlToSvgConverter() throws IOException{
+		
+		InputStream iIn = getClass().getClassLoader().getResourceAsStream("org/adi/lasting/flags/flag.xslt");
+		//File fIn = new File(getClass().getResource("flag.xslt").getFile());
+		style = new StreamSource(iIn);
 		
 		factory = DocumentBuilderFactory.newInstance();
 		transformerFactory = TransformerFactory.newInstance();

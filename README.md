@@ -8,7 +8,7 @@ It will generate png flags from an xml file.
 It takes two parameters
 * dimension: in the form: WxH where W is the width and H is the height of the file you want generated (ex. 900x400 for a generated image file of 900 pixels wide by 400 pixels tall)
 * inputFile: just the name of the xml file containing the flag definition
-
+ 
 for example to start it with maven directly you would write:
 ```
 mvn exec:java -e -Dexec.mainClass="org.adi.lasting.flags.FlagGenerator" -Dexec.args="900x400 Ethiopia.xml"
@@ -17,6 +17,19 @@ This would generate a flag 900 pixels wide by 400 pixels wide with the specifica
 You would get 2 output files:
 * An SVG file named like the input file but with the _.SVG_ extension
 * An PNG file named _out.png_
+
+You could also compile with dependencies:
+
+```
+mvn clean compile assembly:single
+```
+
+And then run the file in **target** directory directly from java:
+
+```
+java -cp target/flags-1.0.0-jar-with-dependencies.jar org.adi.lasting.flags.FlagGenerator 1000x600 FIAZ.xml
+```
+
 
 ###What does it use
 It uses:
