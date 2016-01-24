@@ -9,6 +9,11 @@ import org.junit.Before;
 
 public class FlagGeneratorTest{
 	String size, badSize;
+	/**
+	 * TODO 
+	 * Add more tests - but for now is ok.
+	 */
+	
 	@Before
 	public void initParams(){
 		size = "600x300";

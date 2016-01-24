@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.util.Enumeration;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +25,9 @@ public class XmlToSvgConverter implements ISvgConverter<File> {
 	private DocumentBuilderFactory factory;
 	private TransformerFactory transformerFactory;
 	
+	/**
+	 * Constructor for XmlToSvgConverter 
+	 */
 	public XmlToSvgConverter() throws IOException{
 		
 		InputStream iIn = getClass().getClassLoader().getResourceAsStream("org/adi/lasting/flags/flag.xslt");
@@ -37,6 +38,13 @@ public class XmlToSvgConverter implements ISvgConverter<File> {
 		transformerFactory = TransformerFactory.newInstance();
 	}
 	
+	/**
+	 * This is the method that performs the actual transformation
+	 * @param dataFile  - the file where the xml file lies - the xslt transformation will be aplied on this
+	 * @param width 	- the width of the generated SVG
+	 * @param height 	- the height of the generated SVG
+	 * @param os 		- the OutputStream where the result will be written
+	 */
 	private boolean tryConvertToSvgObject(File dataFile, int width, int height, OutputStream os) throws Exception{
 		DocumentBuilder docBuilder = factory.newDocumentBuilder();
 		Document doc = docBuilder.parse(dataFile);
@@ -49,6 +57,12 @@ public class XmlToSvgConverter implements ISvgConverter<File> {
 		return true;
 	}
 	
+	/**
+	 * Method to generate a SVG file from the input xml flag file 
+	 * @param  dataFile -  the file where the xml file lies - the xslt transformation will be aplied on this
+	 * @param  width 	-  the width of the generated SVG image
+	 * @param  height	-  the height of the generated SVG image
+	 */
 	public File convertToSvgFile(File dataFile, int width, int height) throws Exception {
 		
 		String outFile = FlagGenerator.getNextFreeFileName(dataFile.getName().substring(0,(dataFile.getName().length()-4))+".svg", ".svg");
@@ -65,10 +79,16 @@ public class XmlToSvgConverter implements ISvgConverter<File> {
 		
 	}
 
+	/**
+	 * Method to generate a SVG string from the input xml flag file 
+	 * @param  dataFile -  the file where the xml file lies - the xslt transformation will be aplied on this
+	 * @param  width 	-  the width of the generated SVG image
+	 * @param  height	-  the height of the generated SVG image
+	 */
 	public String convertToSvgString(File dataFile, int width, int height) throws Exception{
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try{
+		
+		try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
 			tryConvertToSvgObject(dataFile, width, height, baos);
 			String s = baos.toString();
 			baos.close();
