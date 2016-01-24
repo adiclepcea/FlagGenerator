@@ -23,7 +23,7 @@ It uses:
 * Batik for SVG to PNG conversion
 * XSLT for XML to SVG conversion
 
-###What is the inpur format
+###What is the input format
 The input format is a modified SVG format. 
 The modifications are not huge, but do make a diference when you need to create a simple flag.
 Basically if you have rectangles defined in your flag that have coordinates reaching maximum width and height, you can ignore puting a **viewBox** field.
