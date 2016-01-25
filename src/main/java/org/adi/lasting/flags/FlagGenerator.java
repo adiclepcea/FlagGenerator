@@ -1,6 +1,7 @@
 package org.adi.lasting.flags;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -8,8 +9,11 @@ public class FlagGenerator{
 	
 	private int width, height;
 	
-	public FlagGenerator(){
-		
+	private ISvgConverter<File> flagToSvg;
+	
+	
+	public FlagGenerator(ISvgConverter<File> flagConverter){
+		this.flagToSvg = flagConverter;
 	}
 	
 	/**
@@ -49,26 +53,24 @@ public class FlagGenerator{
 		return fOut.getName();
 	}
 	/**
-	 * This will generate a SVG string from an XML
+	 * This will generate a SVG string from an Flag file
 	 * @param fIn - File containing a flag representation
 	 * @return - String - the resulted SVG
 	 * for a File result see {@link #generateSVGFileFromXml(File) generateSVGFileFromXml(File f)}
 	 * @throws Exception
 	 */
-	public String generateSVGStringFromXml(File fIn) throws Exception{
-		ISvgConverter<File> xmlToSvg = new XmlToSvgConverter();
-		return xmlToSvg.convertToSvgString(fIn,getWidth(),getHeight());
+	public String generateSVGString(File fIn) throws Exception{		
+		return flagToSvg.convertToSvgString(fIn,getWidth(),getHeight());
 	}
 	/**
-	 * This will generate a SVG File from an XML
+	 * This will generate a SVG File from an Flag file
 	 * @param fIn - File containing a flag representation
 	 * @return	- File - the resulted SVG file
 	 * for a String result see {@link #generateSVGStringFromXml(File) generateSVGStringFromXml(String f)}
 	 * @throws Exception
 	 */
-	public File generateSVGFileFromXml(File fIn) throws Exception{
-		ISvgConverter<File> xmlToSvg = new XmlToSvgConverter();
-		return xmlToSvg.convertToSvgFile(fIn,getWidth(),getHeight());
+	public File generateSVGFile(File fIn) throws Exception{
+		return flagToSvg.convertToSvgFile(fIn,getWidth(),getHeight());
 	}
 	/**
 	 * returns the desired width of the output image 
@@ -127,7 +129,15 @@ public class FlagGenerator{
 			System.exit(1);
 		}
 		
-		FlagGenerator fg = new FlagGenerator();
+		//we instantiate a Xml adapter to decorate out FlagGenerator class with
+		ISvgConverter<File> flagToSvg = null;
+		try{
+			 flagToSvg = new XmlToSvgConverter();
+		}catch(IOException ioex){
+			System.out.println("Internal error - something happened to my xslt file !");
+			System.exit(1);
+		}
+		FlagGenerator fg = new FlagGenerator(flagToSvg);
 		fg.getWidthAndHeightFromSize(args[0]);
 		
 		if(fg.getWidth()<0 || fg.getHeight()<0){
@@ -143,11 +153,12 @@ public class FlagGenerator{
 		}
 		
 		try{
-			System.out.println("Generting intermediary SVG file...");
-			File fSvg=fg.generateSVGFileFromXml(fIn);
+			
+			System.out.println("Generating intermediary SVG file...");
+			File fSvg=fg.generateSVGFile(fIn);
 			
 			/*we could also use this string and load a document in the batik transcoder
-			*	String sSvg = fg.generateSVGStringFromXml(fIn);
+			*	String sSvg = fg.generateSVGString(fIn);
 			*/
 			System.out.println("Generated "+Paths.get(fSvg.getName()).toUri().toURL().toString());
 			
