@@ -25,7 +25,7 @@ public class FlagGeneratorTest{
 	@Test
 	public void getWidthAndHeightFromSizeShouldReturnOK(){		
 		FlagGenerator fg = new FlagGenerator(new MockSvgConverter());
-		fg.getWidthAndHeightFromSize(size);
+		fg.getWidthAndHeightFromSizeString(size);
 		
 		assertEquals(600, fg.getWidth());		
 		assertEquals(300, fg.getHeight());
@@ -35,7 +35,7 @@ public class FlagGeneratorTest{
 	public void getWidthFromSizeShouldReturnMinus1(){
 		
 		FlagGenerator fg = new FlagGenerator(new MockSvgConverter());
-		fg.getWidthAndHeightFromSize(badSize);
+		fg.getWidthAndHeightFromSizeString(badSize);
 		
 		assertEquals(-1, fg.getWidth());		
 		assertEquals(-1, fg.getHeight());		

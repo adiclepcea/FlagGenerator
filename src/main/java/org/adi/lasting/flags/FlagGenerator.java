@@ -2,7 +2,6 @@ package org.adi.lasting.flags;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class FlagGenerator{
@@ -72,6 +71,23 @@ public class FlagGenerator{
 	public File generateSVGFile(File fIn) throws Exception{
 		return flagToSvg.convertToSvgFile(fIn,getWidth(),getHeight());
 	}
+	
+	/**
+	 * This will generate a PNG file from the SVG file received as paramater
+	 * The PNG file will be of the form out[x].png
+	 * @param fSvg - the SVG file to use as source
+	 * @return the generated PNG file
+	 * @throws Exception - all the exceptions from SvgToImageConverter 
+	 * @see SvgToImageConverter
+	 */
+	public File generatePNGFileFromSVG(File fSvg) throws Exception{
+		SvgToImageConverter svgToImage = new SvgToImageConverter(fSvg);
+		String outFileName = FlagGenerator.getNextFreeFileName("out.png", ".png");
+		File fOut = new File(outFileName);
+		svgToImage.transformToPNG(fOut);
+		
+		return fSvg;
+	}
 	/**
 	 * returns the desired width of the output image 
 	 * @return integer - the width as calculated by {@link #getWidthAndHeightFromSize(String)}
@@ -94,7 +110,7 @@ public class FlagGenerator{
 	 * @param size - the string representing the size (ie. <i>800x600</i>)
 	 * @see {@link #getHeight() getHeight() }, {@link #getWidth() getWidth() }
 	 */
-	protected void getWidthAndHeightFromSize(String size){		
+	protected void getWidthAndHeightFromSizeString(String size){		
 		
 		String[] rez = size.split("x");		
 		width = isInteger(rez[0],10) ? Integer.parseInt(rez[0]):-1;
@@ -138,7 +154,7 @@ public class FlagGenerator{
 			System.exit(1);
 		}
 		FlagGenerator fg = new FlagGenerator(flagToSvg);
-		fg.getWidthAndHeightFromSize(args[0]);
+		fg.getWidthAndHeightFromSizeString(args[0]);
 		
 		if(fg.getWidth()<0 || fg.getHeight()<0){
 			System.out.printf("\"%s\" is an invalid size.\r\n",args[0]);
@@ -160,16 +176,13 @@ public class FlagGenerator{
 			/*we could also use this string and load a document in the batik transcoder
 			*	String sSvg = fg.generateSVGString(fIn);
 			*/
-			System.out.println("Generated "+Paths.get(fSvg.getName()).toUri().toURL().toString());
+			System.out.printf("Generated %s \r\n"+fSvg.getName());
 			
 			System.out.println("Generating PNG file ...");
 			
-			SvgToImageConverter svgToImage = new SvgToImageConverter(fSvg);
-			String outFileName = FlagGenerator.getNextFreeFileName("out.png", ".png");
-			File fOut = new File(outFileName);
-			svgToImage.transformToPNG(fOut);
+			File fPNG = fg.generatePNGFileFromSVG(fSvg);
 			
-			System.out.printf("Generated %s file. \r\nHave a good day! \r\n",outFileName);
+			System.out.printf("Generated %s file. \r\nHave a good day! \r\n",fPNG.getName());
 			
 		}catch(Exception ex){
 			//this could be logged and we should also test for individual exceptions
