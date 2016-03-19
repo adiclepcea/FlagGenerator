@@ -1,7 +1,7 @@
 #FlagGenerator
 
 ###What it is
-Java program - Maven project
+Java program + Maven project
 It will generate png flags from an xml file.
 
 ###How to use it
