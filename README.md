@@ -1,10 +1,10 @@
-#FlagGenerator
+# FlagGenerator
 
-###What it is
+### What it is
 Java program + Maven project
 It will generate png flags from an xml file.
 
-###How to use it
+### How to use it
 It takes two parameters
 * dimension: in the form: WxH where W is the width and H is the height of the file you want generated (ex. 900x400 for a generated image file of 900 pixels wide by 400 pixels tall)
 * inputFile: just the name of the xml file containing the flag definition
@@ -31,12 +31,12 @@ java -cp target/flags-1.0.0-jar-with-dependencies.jar org.adi.lasting.flags.Flag
 ```
 
 
-###What does it use
+### What does it use
 It uses:
 * Batik for SVG to PNG conversion
 * XSLT for XML to SVG conversion
 
-###What is the input format
+### What is the input format
 The input format is a modified SVG format. 
 The modifications are not huge, but do make a diference when you need to create a simple flag.
 Basically if you have rectangles defined in your flag that have coordinates reaching maximum width and height, you can ignore puting a **viewBox** field.
@@ -45,7 +45,7 @@ They will be put automatically by the program. You do need however to add **xmln
 in XSLT 1.0. So I will consider copying your namespace in case you have it defined.
 Another small modification I did is change the **<svg>** tag with the **<flag>** tag in the input format. This is just not to confuse one for another.
 
-###Example input file
+### Example input file
 
 * Instead of writing this (SVG):
 ```
